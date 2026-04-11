@@ -3,7 +3,7 @@ import axios from 'axios';
 const API = axios.create({
     baseURL: process.env.REACT_APP_API_URL || 'http://127.0.0.1:8001',
     headers: { 'Content-Type': 'application/json' },
-    timeout: 30000
+    timeout: 60000
 });
 
 API.interceptors.request.use((config) => {
@@ -13,5 +13,15 @@ API.interceptors.request.use((config) => {
     }
     return config;
 });
+
+API.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.code === 'ECONNABORTED') {
+            console.log('Request timeout');
+        }
+        return Promise.reject(error);
+    }
+);
 
 export default API;

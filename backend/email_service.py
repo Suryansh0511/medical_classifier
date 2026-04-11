@@ -3,16 +3,15 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from dotenv import load_dotenv
 import os
+import threading
 
 load_dotenv()
 
 GMAIL_EMAIL    = os.getenv("GMAIL_EMAIL")
 GMAIL_PASSWORD = os.getenv("GMAIL_PASSWORD")
 
-def send_appointment_reminder(
-    to_email, patient_name, hospital_name,
-    department, date, time_slot, symptoms
-):
+def send_email_async(to_email, patient_name, hospital_name,
+                     department, date, time_slot, symptoms):
     try:
         msg = MIMEMultipart()
         msg['From']    = GMAIL_EMAIL
@@ -48,9 +47,19 @@ Stay healthy!
         server.login(GMAIL_EMAIL, GMAIL_PASSWORD)
         server.sendmail(GMAIL_EMAIL, to_email, msg.as_string())
         server.quit()
-
-        return True
+        print(f"✅ Email sent to {to_email}")
 
     except Exception as e:
         print(f"Email error: {e}")
-        return False
+
+def send_appointment_reminder(to_email, patient_name, hospital_name,
+                               department, date, time_slot, symptoms):
+    # Send email in background thread so it doesn't block response
+    thread = threading.Thread(
+        target=send_email_async,
+        args=(to_email, patient_name, hospital_name,
+              department, date, time_slot, symptoms)
+    )
+    thread.daemon = True
+    thread.start()
+    return True
