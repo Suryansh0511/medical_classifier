@@ -3,7 +3,7 @@ import axios from 'axios';
 const API = axios.create({
     baseURL: 'https://medi-classify.onrender.com',
     headers: { 'Content-Type': 'application/json' },
-    timeout: 30000  // ← Increased to 30s for Render free tier
+    timeout: 30000
 });
 
 API.interceptors.request.use((config) => {
