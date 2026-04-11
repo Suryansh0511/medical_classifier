@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-    baseURL: 'https://medi-classify.onrender.com',
+    baseURL: process.env.REACT_APP_API_URL || 'http://127.0.0.1:8001',
     headers: { 'Content-Type': 'application/json' },
     timeout: 30000
 });
