@@ -18,7 +18,12 @@ app = FastAPI(title="Medical Classifier API")
 # CORS (IMPORTANT for frontend)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # change to your frontend URL later
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://medical-classifier.vercel.app/", 
+        "*"  # ← Allow all for now
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
